@@ -2,10 +2,10 @@ import { Link } from 'react-router-dom';
 import AddButton from './AddButton';
 import ShareLinkButton from './ShareLinkButton';
 import { IconImage, IconMapPin } from './icons';
-import { priceForLift, priceForHall } from '../utils/pricing';
+import { priceForLift, priceForHall, bcHeadlineAmount, headlineText } from '../utils/pricing';
 import { liftCartItem, hallCartItem } from '../utils/cartItems';
 import { placeId, placePath } from '../utils/slug';
-import { coverPhoto } from '../data/examplePhotos';
+import { coverPhoto, photosForPlace } from '../data/examplePhotos';
 
 function BusinessCenterCard({ item, isInCart, onToggle }) {
   const lift = item.lift ? priceForLift(item.lift.format) : null;
@@ -14,46 +14,48 @@ function BusinessCenterCard({ item, isInCart, onToggle }) {
   const hallId = 'bc-hall-' + item.address;
   const id = placeId('bc', item.name);
   const photo = coverPhoto('bc', item);
+  const photoCount = photosForPlace('bc', item).length;
+  const headline = headlineText(bcHeadlineAmount(item));
 
   return (
-    <div className="listing-card" id={id}>
-      <div className="listing-media">
+    <div className="p-card" id={id}>
+      <div className="p-media">
         {photo ? (
           <img src={photo.src} alt={item.name} loading="lazy" />
         ) : (
-          <div className="listing-media-placeholder"><IconImage size={28} /></div>
+          <div className="p-media-placeholder"><IconImage size={28} /></div>
         )}
-        <span className="listing-media-badge">Бизнес-центр</span>
+        <span className="p-tag"><IconImage size={12} />Бизнес-центр</span>
+        {photoCount > 1 && <span className="p-photocount">{photoCount} фото</span>}
+        <span className="p-pricetag">{headline}</span>
       </div>
 
-      <div className="listing-body">
-        <div>
-          <Link to={placePath(id)} className="listing-title">{item.name}</Link>
-          <div className="listing-addr"><IconMapPin size={13} />{item.address}</div>
-        </div>
+      <div className="p-body">
+        <Link to={placePath(id)} className="p-title">{item.name}</Link>
+        <div className="p-addr"><IconMapPin size={13} />{item.address}</div>
 
-        <div className="listing-prices">
+        <div className="p-offers">
           {item.lift && (
-            <div className="listing-price-row">
-              <div className="info">
-                <span className="label">Лифт · {item.lift.qty} шт · {item.lift.format}</span>
-                <span className={`price ${lift.muted ? 'muted' : ''}`}>{lift.text}</span>
+            <div className="p-offer">
+              <div className="p-offer-info">
+                <span className="p-offer-label">Лифт · {item.lift.qty} шт · {item.lift.format}</span>
+                <span className={`p-offer-price ${lift.muted ? 'muted' : ''}`}>{lift.text}</span>
               </div>
               <AddButton added={isInCart(liftId)} onClick={() => onToggle(liftCartItem(item))} />
             </div>
           )}
           {item.hall && (
-            <div className="listing-price-row">
-              <div className="info">
-                <span className="label">Холл · {item.hall.format}</span>
-                <span className={`price ${hall.muted ? 'muted' : ''}`}>{hall.text}</span>
+            <div className="p-offer">
+              <div className="p-offer-info">
+                <span className="p-offer-label">Холл · {item.hall.format}</span>
+                <span className={`p-offer-price ${hall.muted ? 'muted' : ''}`}>{hall.text}</span>
               </div>
               <AddButton added={isInCart(hallId)} onClick={() => onToggle(hallCartItem(item))} />
             </div>
           )}
         </div>
 
-        <div className="listing-footer">
+        <div className="p-foot">
           <ShareLinkButton id={id} label />
         </div>
       </div>
@@ -72,7 +74,7 @@ export default function BusinessCentersSection({ items, city, isInCart, onToggle
         </div>
       </div>
       {items.length ? (
-        <div className="grid">
+        <div className="p-grid">
           {items.map((item) => (
             <BusinessCenterCard key={item.address} item={item} isInCart={isInCart} onToggle={onToggle} />
           ))}

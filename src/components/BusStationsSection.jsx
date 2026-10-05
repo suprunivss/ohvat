@@ -3,30 +3,33 @@ import ShareLinkButton from './ShareLinkButton';
 import { IconImage, IconMapPin } from './icons';
 import { tariffCartItem } from '../utils/cartItems';
 import { placeId, placePath } from '../utils/slug';
-import { coverPhoto } from '../data/examplePhotos';
+import { coverPhoto, photosForPlace } from '../data/examplePhotos';
+import { minTariffAmount, headlineText } from '../utils/pricing';
 
 function BusStationCard({ city, info, isInCart, onToggle }) {
   const id = placeId('av', city);
   const photo = coverPhoto('av', { city });
+  const photoCount = photosForPlace('av', { city }).length;
+  const headline = headlineText(minTariffAmount(info.tariffs));
 
   return (
-    <div className="listing-card" id={id}>
-      <div className="listing-media">
+    <div className="p-card" id={id}>
+      <div className="p-media">
         {photo ? (
           <img src={photo.src} alt={`Автовокзал ${city}`} loading="lazy" />
         ) : (
-          <div className="listing-media-placeholder"><IconImage size={28} /></div>
+          <div className="p-media-placeholder"><IconImage size={28} /></div>
         )}
-        <span className="listing-media-badge">экран {info.screen}</span>
+        <span className="p-tag"><IconImage size={12} />экран {info.screen}</span>
+        {photoCount > 1 && <span className="p-photocount">{photoCount} фото</span>}
+        <span className="p-pricetag">{headline}</span>
       </div>
 
-      <div className="listing-body">
-        <div>
-          <Link to={placePath(id)} className="listing-title">Автовокзал {city}</Link>
-          <div className="listing-addr"><IconMapPin size={13} />{info.addr}</div>
-        </div>
+      <div className="p-body">
+        <Link to={placePath(id)} className="p-title">Автовокзал {city}</Link>
+        <div className="p-addr"><IconMapPin size={13} />{info.addr}</div>
 
-        <div className="listing-meta">Трансляция: {info.hours} · {info.block}</div>
+        <div className="p-meta">Трансляция: {info.hours} · {info.block}</div>
 
         <div className="av-tariffs">
           {info.tariffs.map(([dur, priceStr]) => {
@@ -45,7 +48,7 @@ function BusStationCard({ city, info, isInCart, onToggle }) {
           })}
         </div>
 
-        <div className="listing-footer">
+        <div className="p-foot">
           <ShareLinkButton id={id} label />
         </div>
       </div>
@@ -64,7 +67,7 @@ export default function BusStationsSection({ entries, city, isInCart, onToggle }
         </div>
       </div>
       {entries.length ? (
-        <div className="grid">
+        <div className="p-grid">
           {entries.map(([stationCity, info]) => (
             <BusStationCard key={stationCity} city={stationCity} info={info} isInCart={isInCart} onToggle={onToggle} />
           ))}

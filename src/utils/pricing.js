@@ -20,3 +20,29 @@ export function parseAmount(priceStr) {
 export function formatRub(amount) {
   return amount.toLocaleString('ru-RU') + ' ₽';
 }
+
+// Справочная "вилка" для ВУЗов — точная цена зависит от конкретной позиции
+// и подтверждается у партнёра, но для карточки нужен ориентир.
+export const UNIVERSITY_PRICE_FROM = 7000;
+
+export function bcHeadlineAmount(item) {
+  const amounts = [];
+  if (item.lift) {
+    const p = priceForLift(item.lift.format);
+    if (p.amount) amounts.push(p.amount);
+  }
+  if (item.hall) {
+    const p = priceForHall(item.hall.format);
+    if (p.amount) amounts.push(p.amount);
+  }
+  return amounts.length ? Math.min(...amounts) : null;
+}
+
+export function minTariffAmount(tariffs) {
+  const amounts = tariffs.map(([, priceStr]) => parseAmount(priceStr)).filter(Boolean);
+  return amounts.length ? Math.min(...amounts) : null;
+}
+
+export function headlineText(amount) {
+  return amount ? `от ${formatRub(amount)}/мес` : 'цена по запросу';
+}

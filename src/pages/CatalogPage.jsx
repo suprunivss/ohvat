@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import CatalogHeader from '../components/CatalogHeader';
 import CatalogToolbar from '../components/CatalogToolbar';
+import CatalogFilters from '../components/CatalogFilters';
 import BusinessCentersSection from '../components/BusinessCentersSection';
 import BusStationsSection from '../components/BusStationsSection';
 import UniversitiesSection from '../components/UniversitiesSection';
@@ -54,22 +55,36 @@ export default function CatalogPage() {
     (!showVUZ || vuzFiltered.length === 0) &&
     (!showTR || trFiltered.length === 0);
 
+  const counts = {
+    all: bcFiltered.length + avFiltered.length + vuzFiltered.length + trFiltered.length,
+    bc: bcFiltered.length,
+    av: avFiltered.length,
+    vuz: vuzFiltered.length,
+    tr: trFiltered.length,
+  };
+
   return (
     <>
       <CatalogHeader stats={stats} city={city} cities={CITIES} onCityChange={setCity} />
       <CatalogToolbar activeTab={activeTab} onTabChange={setActiveTab} query={query} onQueryChange={setQuery} />
 
       <main>
-        {nothingFound ? (
-          <div className="empty">По запросу «{query}» ничего не найдено в городе «{city}»</div>
-        ) : (
-          <>
-            {showBC && <BusinessCentersSection items={bcFiltered} city={city} isInCart={isInCart} onToggle={toggleItem} />}
-            {showAV && <BusStationsSection entries={avFiltered} city={city} isInCart={isInCart} onToggle={toggleItem} />}
-            {showVUZ && <UniversitiesSection items={vuzFiltered} city={city} isInCart={isInCart} onToggle={toggleItem} />}
-            {showTR && <TransportSection routes={trFiltered} city={city} isInCart={isInCart} onToggle={toggleItem} />}
-          </>
-        )}
+        <div className="catalog-layout">
+          <CatalogFilters activeTab={activeTab} onTabChange={setActiveTab} query={query} onQueryChange={setQuery} counts={counts} />
+
+          <div className="catalog-results">
+            {nothingFound ? (
+              <div className="empty">По запросу «{query}» ничего не найдено в городе «{city}»</div>
+            ) : (
+              <>
+                {showBC && <BusinessCentersSection items={bcFiltered} city={city} isInCart={isInCart} onToggle={toggleItem} />}
+                {showAV && <BusStationsSection entries={avFiltered} city={city} isInCart={isInCart} onToggle={toggleItem} />}
+                {showVUZ && <UniversitiesSection items={vuzFiltered} city={city} isInCart={isInCart} onToggle={toggleItem} />}
+                {showTR && <TransportSection routes={trFiltered} city={city} isInCart={isInCart} onToggle={toggleItem} />}
+              </>
+            )}
+          </div>
+        </div>
       </main>
     </>
   );

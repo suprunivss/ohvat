@@ -5,6 +5,7 @@ import { findPlace } from '../utils/findPlace';
 import { photosForPlace } from '../data/examplePhotos';
 import { mockAvailability } from '../utils/mockAvailability';
 import { priceForLift, priceForHall } from '../utils/pricing';
+import { transport } from '../data/catalogData';
 import { liftCartItem, hallCartItem, tariffCartItem, universityCartItem, routeCartItem } from '../utils/cartItems';
 import { useCart } from '../context/CartContext';
 
@@ -157,7 +158,8 @@ export default function PlaceDetailPage() {
             <div className="place-prices">
               <PriceRow
                 label={`Подголовник А4 · ${item.type}`}
-                price="цена по запросу"
+                price={transport.prices[item.type] || 'цена по запросу'}
+                muted={!transport.prices[item.type]}
                 added={isInCart('tr-' + item.num + '-' + item.type)}
                 onAdd={() => toggleItem(routeCartItem(item))}
               />

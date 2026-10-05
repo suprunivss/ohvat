@@ -111,6 +111,34 @@ export function IconArrowBigRight(props) {
   );
 }
 
+export function IconX(props) {
+  return (
+    <Svg {...props}>
+      <path d="M6 6l12 12M18 6 6 18" />
+    </Svg>
+  );
+}
+
+export function IconPalette(props) {
+  return (
+    <Svg {...props}>
+      <path d="M12 3a9 8 0 0 0 0 16c1.1 0 2-.8 2-1.8 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4c0-5-4-6-9-6Z" />
+      <circle cx="7.2" cy="11.5" r="1" fill="currentColor" stroke="none" />
+      <circle cx="9" cy="7.8" r="1" fill="currentColor" stroke="none" />
+      <circle cx="14.5" cy="7" r="1" fill="currentColor" stroke="none" />
+    </Svg>
+  );
+}
+
+export function IconVideo(props) {
+  return (
+    <Svg {...props}>
+      <rect x="3" y="6" width="13" height="12" rx="2" />
+      <path d="M16 10.5 21 7.5v9l-5-3Z" />
+    </Svg>
+  );
+}
+
 export function IconImage(props) {
   return (
     <Svg {...props}>

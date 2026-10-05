@@ -6,6 +6,7 @@ const CATEGORIES = [
   { id: 'av', label: 'Автовокзалы' },
   { id: 'vuz', label: 'ВУЗы' },
   { id: 'tr', label: 'Транспорт' },
+  { id: 'cr', label: 'Креатив' },
 ];
 
 export default function CatalogToolbar({ activeTab, onTabChange, query, onQueryChange }) {

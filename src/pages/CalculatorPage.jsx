@@ -1,23 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatRub } from '../utils/pricing';
+import { STATIC_FORMATS, VIDEO_DURATIONS } from '../data/creativeData';
+import { staticCreativeCartItem, videoCreativeCartItem } from '../utils/cartItems';
 import { useCart } from '../context/CartContext';
-
-// Изготовление через нейросеть + ручная проверка — старовые цены для выхода
-// на рынок, заметно ниже агентских. Не цена размещения — она в каталоге.
-const STATIC_FORMATS = [
-  { id: 'a4', label: 'А4', dims: 'малый формат · подголовники, таблички', amount: 1000 },
-  { id: 'a3', label: 'А3', dims: 'рамка в лифте БЦ', amount: 1500 },
-  { id: 'a1', label: 'А1', dims: 'стенд, рамка в вузе', amount: 2500 },
-  { id: 'a0', label: 'А0 / лайтбокс', dims: 'крупный формат, подсветка', amount: 3500 },
-];
-
-const VIDEO_DURATIONS = [
-  { id: '5s', label: '5 сек', amount: 3500 },
-  { id: '10s', label: '10 сек', amount: 4500 },
-  { id: '15s', label: '15 сек', amount: 5500 },
-  { id: '20s', label: '20 сек', amount: 6500 },
-];
 
 export default function CalculatorPage() {
   const [tab, setTab] = useState('static');
@@ -30,18 +16,7 @@ export default function CalculatorPage() {
   const amount = tab === 'static' ? selectedStatic.amount : selectedVideo.amount;
 
   const handleAdd = () => {
-    const base = tab === 'static'
-      ? { title: 'Макет · ' + selectedStatic.label, sub: selectedStatic.dims }
-      : { title: 'Видеоролик · ' + selectedVideo.label, sub: 'рекламный ролик под размещение' };
-
-    toggleItem({
-      id: 'creative-' + tab + '-' + (tab === 'static' ? staticFormat : videoDuration),
-      cat: 'creative',
-      title: base.title,
-      sub: base.sub,
-      amount,
-      priceText: formatRub(amount),
-    });
+    toggleItem(tab === 'static' ? staticCreativeCartItem(selectedStatic) : videoCreativeCartItem(selectedVideo));
     openPanel();
   };
 

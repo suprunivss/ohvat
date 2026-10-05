@@ -1,6 +1,7 @@
+import { IconX } from './icons';
 import { formatRub } from '../utils/pricing';
 
-export default function CartPanel({ open, cart, onClose, onRemove, onCheckout }) {
+export default function CartPanel({ open, cart, onClose, onRemove, onClear, onCheckout }) {
   const known = cart.filter((c) => c.amount).reduce((s, c) => s + c.amount, 0);
   const unknownCount = cart.filter((c) => !c.amount).length;
 
@@ -10,7 +11,12 @@ export default function CartPanel({ open, cart, onClose, onRemove, onCheckout })
       <aside className={`panel ${open ? 'open' : ''}`}>
         <div className="panel-head">
           <h3>Ваша заявка</h3>
-          <button type="button" className="panel-close" onClick={onClose}>✕</button>
+          <div className="panel-head-actions">
+            {cart.length > 0 && (
+              <button type="button" className="panel-clear" onClick={onClear}>Очистить</button>
+            )}
+            <button type="button" className="panel-close" onClick={onClose}><IconX size={16} /></button>
+          </div>
         </div>
         <div className="panel-body">
           {cart.length === 0 ? (
@@ -20,7 +26,9 @@ export default function CartPanel({ open, cart, onClose, onRemove, onCheckout })
               <div key={item.id} className="cart-item">
                 <div className="cart-item-top">
                   <span className="cart-item-title">{item.title}</span>
-                  <button type="button" className="remove-btn" onClick={() => onRemove(item.id)}>убрать</button>
+                  <button type="button" className="remove-btn" onClick={() => onRemove(item.id)} aria-label="Убрать из заявки">
+                    <IconX size={14} />
+                  </button>
                 </div>
                 <div className="cart-item-sub">{item.sub}</div>
                 <div className="cart-item-bottom">

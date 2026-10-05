@@ -1,4 +1,4 @@
-import { IconBuilding, IconBus, IconGradCap, IconRoute, IconSearch } from './icons';
+import { IconBuilding, IconBus, IconGradCap, IconRoute, IconPalette, IconSearch } from './icons';
 
 const CATEGORIES = [
   { id: 'all', label: 'Все места' },
@@ -6,6 +6,7 @@ const CATEGORIES = [
   { id: 'av', label: 'Автовокзалы', icon: IconBus },
   { id: 'vuz', label: 'ВУЗы', icon: IconGradCap },
   { id: 'tr', label: 'Транспорт', icon: IconRoute },
+  { id: 'cr', label: 'Креатив', icon: IconPalette },
 ];
 
 export default function CatalogFilters({ activeTab, onTabChange, query, onQueryChange, counts }) {

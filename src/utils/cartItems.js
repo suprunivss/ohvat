@@ -1,4 +1,4 @@
-import { priceForLift, priceForHall, parseAmount } from './pricing';
+import { priceForLift, priceForHall, parseAmount, formatRub } from './pricing';
 import { transport } from '../data/catalogData';
 
 export function liftCartItem(item) {
@@ -56,5 +56,27 @@ export function routeCartItem(route) {
     sub: route.route,
     amount: parseAmount(priceStr),
     priceText: priceStr || 'цена по запросу',
+  };
+}
+
+export function staticCreativeCartItem(format) {
+  return {
+    id: 'creative-static-' + format.id,
+    cat: 'creative',
+    title: 'Макет · ' + format.label,
+    sub: format.dims,
+    amount: format.amount,
+    priceText: formatRub(format.amount),
+  };
+}
+
+export function videoCreativeCartItem(duration) {
+  return {
+    id: 'creative-video-' + duration.id,
+    cat: 'creative',
+    title: 'Видеоролик · ' + duration.label,
+    sub: 'рекламный ролик под размещение',
+    amount: duration.amount,
+    priceText: formatRub(duration.amount),
   };
 }

@@ -6,7 +6,9 @@ import BusinessCentersSection from '../components/BusinessCentersSection';
 import BusStationsSection from '../components/BusStationsSection';
 import UniversitiesSection from '../components/UniversitiesSection';
 import TransportSection from '../components/TransportSection';
+import CreativeSection from '../components/CreativeSection';
 import { businessCenters, busStations, universities, transport } from '../data/catalogData';
+import { STATIC_FORMATS, VIDEO_DURATIONS } from '../data/creativeData';
 import { computeCityStats, ALL_CITIES } from '../utils/stats';
 import { listCities } from '../utils/cities';
 import { useCart } from '../context/CartContext';
@@ -44,6 +46,16 @@ export default function CatalogPage() {
     () => transport.routes.filter((r) => (isAllCities || r.city === city) && (!q || norm(r.route).includes(q) || norm(r.num).includes(q) || norm(r.type).includes(q))),
     [city, isAllCities, q]
   );
+  // Изготовление креатива не привязано к городу — доступно всегда, фильтруется только поиском.
+  const crStaticFiltered = useMemo(
+    () => STATIC_FORMATS.filter((f) => !q || norm(f.label).includes(q) || norm(f.dims).includes(q)),
+    [q]
+  );
+  const crVideoFiltered = useMemo(
+    () => VIDEO_DURATIONS.filter((d) => !q || norm(d.label).includes(q)),
+    [q]
+  );
+  const crCount = crStaticFiltered.length + crVideoFiltered.length;
 
   // На вкладке "Все места" скрываем категории без единого совпадения для города —
   // иначе страница превращается в стопку "в каталоге пока нет". На конкретной
@@ -52,24 +64,28 @@ export default function CatalogPage() {
   const showAV = activeTab === 'av' || (activeTab === 'all' && avFiltered.length > 0);
   const showVUZ = activeTab === 'vuz' || (activeTab === 'all' && vuzFiltered.length > 0);
   const showTR = activeTab === 'tr' || (activeTab === 'all' && trFiltered.length > 0);
+  const showCR = activeTab === 'cr' || (activeTab === 'all' && crCount > 0);
 
   const nothingFound =
     Boolean(q) &&
     (!showBC || bcFiltered.length === 0) &&
     (!showAV || avFiltered.length === 0) &&
     (!showVUZ || vuzFiltered.length === 0) &&
-    (!showTR || trFiltered.length === 0);
+    (!showTR || trFiltered.length === 0) &&
+    (!showCR || crCount === 0);
 
   const nothingInCity =
     !q && activeTab === 'all' &&
-    bcFiltered.length === 0 && avFiltered.length === 0 && vuzFiltered.length === 0 && trFiltered.length === 0;
+    bcFiltered.length === 0 && avFiltered.length === 0 && vuzFiltered.length === 0 && trFiltered.length === 0 &&
+    crCount === 0;
 
   const counts = {
-    all: bcFiltered.length + avFiltered.length + vuzFiltered.length + trFiltered.length,
+    all: bcFiltered.length + avFiltered.length + vuzFiltered.length + trFiltered.length + crCount,
     bc: bcFiltered.length,
     av: avFiltered.length,
     vuz: vuzFiltered.length,
     tr: trFiltered.length,
+    cr: crCount,
   };
 
   return (
@@ -92,6 +108,7 @@ export default function CatalogPage() {
                 {showAV && <BusStationsSection entries={avFiltered} city={cityLabel} isInCart={isInCart} onToggle={toggleItem} />}
                 {showVUZ && <UniversitiesSection items={vuzFiltered} city={cityLabel} isInCart={isInCart} onToggle={toggleItem} />}
                 {showTR && <TransportSection routes={trFiltered} city={cityLabel} isInCart={isInCart} onToggle={toggleItem} />}
+                {showCR && <CreativeSection staticItems={crStaticFiltered} videoItems={crVideoFiltered} isInCart={isInCart} onToggle={toggleItem} />}
               </>
             )}
           </div>

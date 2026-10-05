@@ -9,14 +9,14 @@ import { CartProvider, useCart } from './context/CartContext';
 
 function CartWidgets() {
   const {
-    cart, removeItem, panelOpen, openPanel, closePanel,
+    cart, removeItem, clearCart, panelOpen, openPanel, closePanel,
     modalOpen, openModal, closeModal, name, setName, contact, setContact,
   } = useCart();
 
   return (
     <>
       <CartFab count={cart.length} onClick={openPanel} />
-      <CartPanel open={panelOpen} cart={cart} onClose={closePanel} onRemove={removeItem} onCheckout={openModal} />
+      <CartPanel open={panelOpen} cart={cart} onClose={closePanel} onRemove={removeItem} onClear={clearCart} onCheckout={openModal} />
       <CheckoutModal
         open={modalOpen}
         cart={cart}

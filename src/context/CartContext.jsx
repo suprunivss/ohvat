@@ -43,13 +43,17 @@ export function CartProvider({ children }) {
     setCart((prev) => prev.filter((c) => c.id !== id));
   }, []);
 
+  const clearCart = useCallback(() => {
+    setCart([]);
+  }, []);
+
   const openPanel = useCallback(() => setPanelOpen(true), []);
   const closePanel = useCallback(() => setPanelOpen(false), []);
   const openModal = useCallback(() => setModalOpen(true), []);
   const closeModal = useCallback(() => setModalOpen(false), []);
 
   const value = {
-    cart, isInCart, toggleItem, removeItem,
+    cart, isInCart, toggleItem, removeItem, clearCart,
     panelOpen, openPanel, closePanel,
     modalOpen, openModal, closeModal,
     name, setName, contact, setContact,

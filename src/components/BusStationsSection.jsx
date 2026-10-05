@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import ShareLinkButton from './ShareLinkButton';
-import { IconImage } from './icons';
+import { IconImage, IconMapPin } from './icons';
 import { tariffCartItem } from '../utils/cartItems';
 import { placeId, placePath } from '../utils/slug';
 import { coverPhoto } from '../data/examplePhotos';
@@ -23,7 +23,7 @@ function BusStationCard({ city, info, isInCart, onToggle }) {
       <div className="listing-body">
         <div>
           <Link to={placePath(id)} className="listing-title">Автовокзал {city}</Link>
-          <div className="listing-addr">{info.addr}</div>
+          <div className="listing-addr"><IconMapPin size={13} />{info.addr}</div>
         </div>
 
         <div className="listing-meta">Трансляция: {info.hours} · {info.block}</div>

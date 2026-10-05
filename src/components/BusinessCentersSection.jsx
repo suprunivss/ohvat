@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import AddButton from './AddButton';
 import ShareLinkButton from './ShareLinkButton';
-import { IconImage } from './icons';
+import { IconImage, IconMapPin } from './icons';
 import { priceForLift, priceForHall } from '../utils/pricing';
 import { liftCartItem, hallCartItem } from '../utils/cartItems';
 import { placeId, placePath } from '../utils/slug';
@@ -29,7 +29,7 @@ function BusinessCenterCard({ item, isInCart, onToggle }) {
       <div className="listing-body">
         <div>
           <Link to={placePath(id)} className="listing-title">{item.name}</Link>
-          <div className="listing-addr">{item.address}</div>
+          <div className="listing-addr"><IconMapPin size={13} />{item.address}</div>
         </div>
 
         <div className="listing-prices">

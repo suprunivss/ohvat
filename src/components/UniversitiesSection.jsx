@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import AddButton from './AddButton';
 import ShareLinkButton from './ShareLinkButton';
-import { IconImage } from './icons';
+import { IconImage, IconMapPin } from './icons';
 import { universityCartItem } from '../utils/cartItems';
 import { placeId, placePath } from '../utils/slug';
 import { coverPhoto } from '../data/examplePhotos';
@@ -25,7 +25,7 @@ function UniversityCard({ v, isInCart, onToggle }) {
       <div className="listing-body">
         <div>
           <Link to={placePath(id)} className="listing-title">{v.abbr}</Link>
-          <div className="listing-addr">{v.name}</div>
+          <div className="listing-addr"><IconMapPin size={13} />{v.name}</div>
         </div>
 
         <div className="vuz-counts">

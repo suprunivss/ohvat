@@ -95,6 +95,22 @@ export function IconMapPin(props) {
   );
 }
 
+export function IconPlus(props) {
+  return (
+    <Svg {...props}>
+      <path d="M12 5v14M5 12h14" />
+    </Svg>
+  );
+}
+
+export function IconArrowBigRight(props) {
+  return (
+    <Svg {...props}>
+      <path d="M4 12h13M13 6l6 6-6 6" />
+    </Svg>
+  );
+}
+
 export function IconImage(props) {
   return (
     <Svg {...props}>

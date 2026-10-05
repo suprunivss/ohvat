@@ -3,40 +3,31 @@ import { Link } from 'react-router-dom';
 import { formatRub } from '../utils/pricing';
 import { useCart } from '../context/CartContext';
 
-// Средние рыночные цены на изготовление креатива (не на само размещение —
-// цена аренды места считается в каталоге). Финальную стоимость под
-// конкретный бриф подтверждает дизайнер/видеограф.
+// Изготовление через нейросеть + ручная проверка — старовые цены для выхода
+// на рынок, заметно ниже агентских. Не цена размещения — она в каталоге.
 const STATIC_FORMATS = [
-  { id: 'a4', label: 'А4', dims: 'малый формат · подголовники, таблички', amount: 1200 },
-  { id: 'a3', label: 'А3', dims: 'рамка в лифте БЦ', amount: 1800 },
-  { id: 'a1', label: 'А1', dims: 'стенд, рамка в вузе', amount: 2800 },
-  { id: 'a0', label: 'А0 / лайтбокс', dims: 'крупный формат, подсветка', amount: 4500 },
+  { id: 'a4', label: 'А4', dims: 'малый формат · подголовники, таблички', amount: 500 },
+  { id: 'a3', label: 'А3', dims: 'рамка в лифте БЦ', amount: 800 },
+  { id: 'a1', label: 'А1', dims: 'стенд, рамка в вузе', amount: 1200 },
+  { id: 'a0', label: 'А0 / лайтбокс', dims: 'крупный формат, подсветка', amount: 1800 },
 ];
 
 const VIDEO_DURATIONS = [
-  { id: '5s', label: '5 сек', amount: 5000 },
-  { id: '10s', label: '10 сек', amount: 8000 },
-  { id: '15s', label: '15 сек', amount: 11000 },
-  { id: '20s', label: '20 сек', amount: 14000 },
+  { id: '5s', label: '5 сек', amount: 1500 },
+  { id: '10s', label: '10 сек', amount: 2500 },
+  { id: '15s', label: '15 сек', amount: 3500 },
+  { id: '20s', label: '20 сек', amount: 4500 },
 ];
-
-const RUSH_MULTIPLIER = 1.4;
-
-function roundTo100(n) {
-  return Math.round(n / 100) * 100;
-}
 
 export default function CalculatorPage() {
   const [tab, setTab] = useState('static');
   const [staticFormat, setStaticFormat] = useState(STATIC_FORMATS[0].id);
   const [videoDuration, setVideoDuration] = useState(VIDEO_DURATIONS[0].id);
-  const [rush, setRush] = useState(false);
   const { toggleItem, openPanel } = useCart();
 
   const selectedStatic = STATIC_FORMATS.find((f) => f.id === staticFormat);
   const selectedVideo = VIDEO_DURATIONS.find((d) => d.id === videoDuration);
-  const baseAmount = tab === 'static' ? selectedStatic.amount : selectedVideo.amount;
-  const amount = rush ? roundTo100(baseAmount * RUSH_MULTIPLIER) : baseAmount;
+  const amount = tab === 'static' ? selectedStatic.amount : selectedVideo.amount;
 
   const handleAdd = () => {
     const base = tab === 'static'
@@ -44,12 +35,12 @@ export default function CalculatorPage() {
       : { title: 'Видеоролик · ' + selectedVideo.label, sub: 'рекламный ролик под размещение' };
 
     toggleItem({
-      id: 'creative-' + tab + '-' + (tab === 'static' ? staticFormat : videoDuration) + (rush ? '-rush' : ''),
+      id: 'creative-' + tab + '-' + (tab === 'static' ? staticFormat : videoDuration),
       cat: 'creative',
-      title: base.title + (rush ? ' · срочно' : ''),
+      title: base.title,
       sub: base.sub,
       amount,
-      priceText: formatRub(amount) + (rush ? ' · срочно за 24ч' : ''),
+      priceText: formatRub(amount),
     });
     openPanel();
   };
@@ -73,18 +64,6 @@ export default function CalculatorPage() {
 
         <div className="calc-card">
           <div className="calc-left">
-            <div className="calc-field">
-              <span>Срочность</span>
-              <div className="calc-urgency">
-                <button type="button" className={`calc-urgency-btn ${!rush ? 'active' : ''}`} onClick={() => setRush(false)}>
-                  Стандартно<small>2–3 дня</small>
-                </button>
-                <button type="button" className={`calc-urgency-btn ${rush ? 'active' : ''}`} onClick={() => setRush(true)}>
-                  Срочно<small>24 часа · +40%</small>
-                </button>
-              </div>
-            </div>
-
             <div className="calc-total-row">
               <span>Итог</span>
               <b>{formatRub(amount)}</b>
@@ -98,8 +77,8 @@ export default function CalculatorPage() {
               Добавить в заявку
             </button>
             <p className="calc-note">
-              Это средняя рыночная цена изготовления — финальную стоимость под ваш бриф подтверждает дизайнер
-              или видеограф.
+              Макет или ролик делаем с помощью нейросети и проверяем вручную — готово обычно быстро,
+              финальную стоимость под ваш бриф подтверждаем отдельно.
             </p>
           </div>
 

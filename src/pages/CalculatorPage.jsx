@@ -1,58 +1,56 @@
 import { useState } from 'react';
-import { busStations } from '../data/catalogData';
-import { parseAmount, formatRub } from '../utils/pricing';
+import { Link } from 'react-router-dom';
+import { formatRub } from '../utils/pricing';
 import { useCart } from '../context/CartContext';
 
-const STAND_FORMATS = [
-  { id: 'bc-lift', label: 'Лифт в БЦ', dims: 'рамка А3 · 297×420 мм', amount: 5000, priceText: '5 000 ₽/мес' },
-  { id: 'bc-hall', label: 'Холл в БЦ', dims: 'лайтбокс А0 · 841×1189 мм', amount: 10000, priceText: '10 000 ₽/мес + 1 000 ₽ печать' },
-  { id: 'vuz-a1', label: 'Вуз — рамка', dims: 'формат А1', amount: 7000, priceText: '7 000 ₽/мес' },
-  { id: 'vuz-a0', label: 'Вуз — лайтбокс', dims: 'формат А0', amount: 9500, priceText: '9 500 ₽/мес' },
+// Средние рыночные цены на изготовление креатива (не на само размещение —
+// цена аренды места считается в каталоге). Финальную стоимость под
+// конкретный бриф подтверждает дизайнер/видеограф.
+const STATIC_FORMATS = [
+  { id: 'a4', label: 'А4', dims: 'малый формат · подголовники, таблички', amount: 1200 },
+  { id: 'a3', label: 'А3', dims: 'рамка в лифте БЦ', amount: 1800 },
+  { id: 'a1', label: 'А1', dims: 'стенд, рамка в вузе', amount: 2800 },
+  { id: 'a0', label: 'А0 / лайтбокс', dims: 'крупный формат, подсветка', amount: 4500 },
 ];
 
-const ALL_CITIES = Object.keys(busStations);
+const VIDEO_DURATIONS = [
+  { id: '5s', label: '5 сек', amount: 5000 },
+  { id: '10s', label: '10 сек', amount: 8000 },
+  { id: '15s', label: '15 сек', amount: 11000 },
+  { id: '20s', label: '20 сек', amount: 14000 },
+];
+
+const RUSH_MULTIPLIER = 1.4;
+
+function roundTo100(n) {
+  return Math.round(n / 100) * 100;
+}
 
 export default function CalculatorPage() {
-  const [tab, setTab] = useState('stand');
-  const [city, setCity] = useState('Воронеж');
-  const [standFormat, setStandFormat] = useState(STAND_FORMATS[0].id);
+  const [tab, setTab] = useState('static');
+  const [staticFormat, setStaticFormat] = useState(STATIC_FORMATS[0].id);
+  const [videoDuration, setVideoDuration] = useState(VIDEO_DURATIONS[0].id);
+  const [rush, setRush] = useState(false);
   const { toggleItem, openPanel } = useCart();
 
-  const selectedFormat = STAND_FORMATS.find((f) => f.id === standFormat);
-
-  const cityInfo = busStations[city];
-  const durationsForCity = cityInfo ? cityInfo.tariffs : [];
-  const [screenDur, setScreenDur] = useState(durationsForCity[0]?.[0]);
-  const currentTariff = durationsForCity.find(([d]) => d === screenDur) || durationsForCity[0];
-  const screenAmount = currentTariff ? parseAmount(currentTariff[1]) : 0;
-
-  const handleCityChange = (newCity) => {
-    setCity(newCity);
-    const info = busStations[newCity];
-    if (info) setScreenDur(info.tariffs[0][0]);
-  };
+  const selectedStatic = STATIC_FORMATS.find((f) => f.id === staticFormat);
+  const selectedVideo = VIDEO_DURATIONS.find((d) => d.id === videoDuration);
+  const baseAmount = tab === 'static' ? selectedStatic.amount : selectedVideo.amount;
+  const amount = rush ? roundTo100(baseAmount * RUSH_MULTIPLIER) : baseAmount;
 
   const handleAdd = () => {
-    if (tab === 'stand') {
-      toggleItem({
-        id: 'calc-stand-' + selectedFormat.id,
-        cat: 'calc',
-        title: 'Конструктор · ' + selectedFormat.label,
-        sub: selectedFormat.dims,
-        amount: selectedFormat.amount,
-        priceText: selectedFormat.priceText,
-      });
-    } else {
-      if (!currentTariff) return;
-      toggleItem({
-        id: 'calc-screen-' + city + '-' + screenDur,
-        cat: 'calc',
-        title: 'Конструктор · Медиаэкран ' + city,
-        sub: 'ролик ' + screenDur,
-        amount: screenAmount,
-        priceText: currentTariff[1],
-      });
-    }
+    const base = tab === 'static'
+      ? { title: 'Макет · ' + selectedStatic.label, sub: selectedStatic.dims }
+      : { title: 'Видеоролик · ' + selectedVideo.label, sub: 'рекламный ролик под размещение' };
+
+    toggleItem({
+      id: 'creative-' + tab + '-' + (tab === 'static' ? staticFormat : videoDuration) + (rush ? '-rush' : ''),
+      cat: 'creative',
+      title: base.title + (rush ? ' · срочно' : ''),
+      sub: base.sub,
+      amount,
+      priceText: formatRub(amount) + (rush ? ' · срочно за 24ч' : ''),
+    });
     openPanel();
   };
 
@@ -60,81 +58,86 @@ export default function CalculatorPage() {
     <div className="calc-page">
       <div className="calc-inner">
         <div className="calc-top">
-          <h1>Конструктор размещения</h1>
+          <div>
+            <h1>Калькулятор стоимости креатива</h1>
+            <p className="calc-page-sub">
+              Сколько стоит изготовить макет или ролик под размещение. Цена за само место —{' '}
+              <Link to="/catalog">в каталоге</Link>.
+            </p>
+          </div>
           <div className="calc-tabs">
-            <button type="button" className={`calc-tab ${tab === 'stand' ? 'active' : ''}`} onClick={() => setTab('stand')}>Стенды и рамки</button>
-            <button type="button" className={`calc-tab ${tab === 'screen' ? 'active' : ''}`} onClick={() => setTab('screen')}>Медиаэкраны</button>
+            <button type="button" className={`calc-tab ${tab === 'static' ? 'active' : ''}`} onClick={() => setTab('static')}>Статика</button>
+            <button type="button" className={`calc-tab ${tab === 'video' ? 'active' : ''}`} onClick={() => setTab('video')}>Видео</button>
           </div>
         </div>
 
         <div className="calc-card">
           <div className="calc-left">
-            {tab === 'screen' && (
-              <label className="calc-field">
-                <span>Город</span>
-                <select value={city} onChange={(e) => handleCityChange(e.target.value)}>
-                  {ALL_CITIES.map((c) => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </label>
-            )}
             <div className="calc-field">
-              <span>Период размещения</span>
-              <div className="calc-static-value">1 месяц</div>
+              <span>Срочность</span>
+              <div className="calc-urgency">
+                <button type="button" className={`calc-urgency-btn ${!rush ? 'active' : ''}`} onClick={() => setRush(false)}>
+                  Стандартно<small>2–3 дня</small>
+                </button>
+                <button type="button" className={`calc-urgency-btn ${rush ? 'active' : ''}`} onClick={() => setRush(true)}>
+                  Срочно<small>24 часа · +40%</small>
+                </button>
+              </div>
             </div>
-
-            {tab === 'screen' && (
-              <label className="calc-field">
-                <span>Длительность ролика</span>
-                <select value={screenDur} onChange={(e) => setScreenDur(e.target.value)}>
-                  {durationsForCity.map(([d]) => <option key={d} value={d}>{d}</option>)}
-                </select>
-              </label>
-            )}
 
             <div className="calc-total-row">
               <span>Итог</span>
-              <b>{tab === 'stand' ? selectedFormat.priceText : (currentTariff ? currentTariff[1] : 'от 0 ₽')}</b>
+              <b>{formatRub(amount)}</b>
             </div>
             <button
               type="button"
               className="btn-lg primary"
               style={{ width: '100%', justifyContent: 'center' }}
               onClick={handleAdd}
-              disabled={tab === 'screen' && !currentTariff}
             >
               Добавить в заявку
             </button>
             <p className="calc-note">
-              Это ориентировочный расчёт по прайсу — точные условия и наличие места подтверждает партнёр.
+              Это средняя рыночная цена изготовления — финальную стоимость под ваш бриф подтверждает дизайнер
+              или видеограф.
             </p>
           </div>
 
           <div className="calc-right">
-            {tab === 'stand' ? (
+            {tab === 'static' ? (
               <>
                 <div className="calc-right-label">Формат:</div>
                 <div className="calc-format-grid">
-                  {STAND_FORMATS.map((f) => (
+                  {STATIC_FORMATS.map((f) => (
                     <button
                       key={f.id}
                       type="button"
-                      className={`calc-format-tile ${standFormat === f.id ? 'active' : ''}`}
-                      onClick={() => setStandFormat(f.id)}
+                      className={`calc-format-tile ${staticFormat === f.id ? 'active' : ''}`}
+                      onClick={() => setStaticFormat(f.id)}
                     >
                       <span className="calc-format-name">{f.label}</span>
                       <span className="calc-format-dims">{f.dims}</span>
-                      <span className="calc-format-price">{f.priceText}</span>
+                      <span className="calc-format-price">{formatRub(f.amount)}</span>
                     </button>
                   ))}
                 </div>
               </>
             ) : (
               <>
-                <div className="calc-right-label">Экран:</div>
-                <div className="calc-screen-mock">
-                  <span>{city} · {cityInfo?.screen}</span>
-                  <b>ролик {screenDur}</b>
-                  <span className="calc-screen-sum">{formatRub(screenAmount)}</span>
+                <div className="calc-right-label">Длительность:</div>
+                <div className="calc-format-grid">
+                  {VIDEO_DURATIONS.map((d) => (
+                    <button
+                      key={d.id}
+                      type="button"
+                      className={`calc-format-tile ${videoDuration === d.id ? 'active' : ''}`}
+                      onClick={() => setVideoDuration(d.id)}
+                    >
+                      <span className="calc-format-name">{d.label}</span>
+                      <span className="calc-format-dims">видеоролик</span>
+                      <span className="calc-format-price">{formatRub(d.amount)}</span>
+                    </button>
+                  ))}
                 </div>
               </>
             )}

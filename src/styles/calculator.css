@@ -1,6 +1,9 @@
 .calc-page { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
 .calc-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
 .calc-top h1 { font-size: clamp(24px, 3.2vw, 32px); }
+.calc-page-sub { font-size: 13.5px; color: var(--ink-soft); margin-top: 8px; line-height: 1.5; }
+.calc-page-sub a { color: var(--accent-ink); font-weight: 600; }
+.calc-page-sub a:hover { text-decoration: underline; }
 
 .calc-tabs { display: flex; background: var(--surface-2); border-radius: var(--radius-pill); padding: 4px; gap: 2px; }
 .calc-tab {
@@ -15,20 +18,19 @@
 }
 
 .calc-left { display: flex; flex-direction: column; gap: 16px; }
-.calc-field { display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; color: var(--ink-soft); font-weight: 600; }
-.calc-field select {
-  padding: 11px 36px 11px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-pill);
-  background-color: var(--paper); color: var(--ink); font-size: 14px; outline: none; appearance: none; cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238891A3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 13px center; background-size: 15px;
-  transition: border-color .15s ease;
+.calc-field { display: flex; flex-direction: column; gap: 8px; font-size: 12.5px; color: var(--ink-soft); font-weight: 600; }
+
+.calc-urgency { display: flex; flex-direction: column; gap: 8px; }
+.calc-urgency-btn {
+  text-align: left; cursor: pointer; border: 1.5px solid var(--border); background: var(--surface-2);
+  color: var(--ink); border-radius: var(--radius-card); padding: 12px 16px; font-size: 13.5px; font-weight: 700;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  transition: border-color .15s ease, background .15s ease;
 }
-.calc-field select:hover { border-color: var(--accent); }
-.calc-field select:disabled { opacity: .7; cursor: not-allowed; }
-.calc-static-value {
-  padding: 11px 14px; border: 1.5px solid transparent; border-radius: var(--radius-pill);
-  background: var(--surface-2); color: var(--ink-soft); font-size: 14px; font-weight: 500;
-}
+.calc-urgency-btn small { font-weight: 500; color: var(--ink-faint); font-size: 11.5px; }
+.calc-urgency-btn:hover { border-color: var(--accent); }
+.calc-urgency-btn.active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-ink); }
+.calc-urgency-btn.active small { color: var(--accent-ink); opacity: .8; }
 
 .btn-lg:disabled { opacity: .45; cursor: not-allowed; transform: none; }
 
@@ -48,17 +50,6 @@
 .calc-format-name { font-weight: 700; font-size: 14px; }
 .calc-format-dims { font-size: 11.5px; color: var(--ink-faint); }
 .calc-format-price { font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 13px; color: var(--accent-ink); margin-top: 4px; }
-
-/* Мокап «экрана» нарочно не следует теме — это имитация тёмного медиаэкрана,
-   а не обычная карточка, поэтому цвета фиксированные, а не --ink/--paper
-   (которые в тёмной теме меняются местами и ломают контраст). */
-.calc-screen-mock {
-  background: var(--spotlight-1); color: #fff; border-radius: var(--radius-card); aspect-ratio: 16/10;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 20px;
-}
-.calc-screen-mock span { font-size: 13px; color: rgba(255, 255, 255, .72); }
-.calc-screen-mock b { font-size: 18px; font-family: 'Manrope', sans-serif; color: #fff; }
-.calc-screen-sum { font-size: 16px !important; color: #FF9A63 !important; font-weight: 700; }
 
 @media (max-width: 760px) {
   .calc-card { grid-template-columns: 1fr; padding: 24px; }

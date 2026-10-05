@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, claude/relaxed-bohr-21l5k5]
   workflow_dispatch: {}
 
 permissions:

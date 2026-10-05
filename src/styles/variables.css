@@ -1,0 +1,99 @@
+:root {
+  --paper: #F5F7FB;
+  --surface: #FFFFFF;
+  --surface-2: #F0F2F8;
+  --border: #E3E7F0;
+  --ink: #0B1220;
+  --ink-soft: #4B5566;
+  --ink-faint: #8891A3;
+
+  --accent: #3A5CFF;
+  --accent-ink: #2541D6;
+  --accent-soft: #E9EDFF;
+
+  --cta: #FF7A3D;
+  --cta-ink: #C75A22;
+  --cta-hover: #FF6620;
+  --cta-soft: #FFE9DB;
+
+  --ok: #1E9E6D;
+  --ok-soft: #E1F7EC;
+  --warn: #B07A12;
+  --warn-soft: #FBF0D9;
+  --danger: #E1453A;
+  --danger-soft: #FBE4E1;
+
+  --spotlight-1: #0B1220;
+  --spotlight-2: #3548B8;
+
+  --radius-sm: 8px;
+  --radius-card: 14px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  --shadow-rest: 0 1px 2px rgba(15, 23, 42, .05), 0 1px 1px rgba(15, 23, 42, .03);
+  --shadow-hover: 0 20px 40px -14px rgba(23, 35, 66, .20);
+  --shadow-pop: 0 24px 60px -16px rgba(23, 35, 66, .28);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0B0F19;
+    --surface: #121726;
+    --surface-2: #171D30;
+    --border: #262E44;
+    --ink: #F3F5FA;
+    --ink-soft: #AEB6C8;
+    --ink-faint: #767F96;
+
+    --accent: #7C93FF;
+    --accent-ink: #AEBBFF;
+    --accent-soft: #1C2550;
+
+    --cta: #FF9A63;
+    --cta-ink: #FFC39E;
+    --cta-hover: #FFAE80;
+    --cta-soft: #3A2415;
+
+    --ok: #5FD8A4;
+    --ok-soft: #113226;
+    --warn: #E3BB63;
+    --warn-soft: #2E2410;
+    --danger: #FF8A7A;
+    --danger-soft: #3A1C18;
+
+    --shadow-rest: 0 1px 2px rgba(0, 0, 0, .4);
+    --shadow-hover: 0 24px 48px -16px rgba(0, 0, 0, .55);
+    --shadow-pop: 0 32px 70px -18px rgba(0, 0, 0, .65);
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: #0B0F19;
+  --surface: #121726;
+  --surface-2: #171D30;
+  --border: #262E44;
+  --ink: #F3F5FA;
+  --ink-soft: #AEB6C8;
+  --ink-faint: #767F96;
+
+  --accent: #7C93FF;
+  --accent-ink: #AEBBFF;
+  --accent-soft: #1C2550;
+
+  --cta: #FF9A63;
+  --cta-ink: #FFC39E;
+  --cta-hover: #FFAE80;
+  --cta-soft: #3A2415;
+
+  --ok: #5FD8A4;
+  --ok-soft: #113226;
+  --warn: #E3BB63;
+  --warn-soft: #2E2410;
+  --danger: #FF8A7A;
+  --danger-soft: #3A1C18;
+
+  --shadow-rest: 0 1px 2px rgba(0, 0, 0, .4);
+  --shadow-hover: 0 24px 48px -16px rgba(0, 0, 0, .55);
+  --shadow-pop: 0 32px 70px -18px rgba(0, 0, 0, .65);
+}

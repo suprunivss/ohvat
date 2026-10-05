@@ -1,0 +1,50 @@
+.place-page { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
+.place-back { display: inline-block; font-size: 13.5px; color: var(--ink-soft); margin-bottom: 20px; }
+.place-back:hover { color: var(--accent-ink); }
+
+.place-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
+.place-category {
+  display: inline-block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+  color: var(--accent-ink); background: var(--accent-soft); padding: 4px 10px; border-radius: var(--radius-pill); margin-bottom: 10px;
+}
+.place-title { font-size: clamp(24px, 3.4vw, 32px); margin-bottom: 6px; }
+.place-address { font-size: 14px; color: var(--ink-soft); }
+.place-share { flex-shrink: 0; padding: 9px 14px; font-size: 13px; }
+
+.place-availability {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 13.5px; font-weight: 700;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card);
+  padding: 12px 16px; margin-bottom: 24px;
+}
+.place-availability-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.place-availability.free { color: var(--ok); }
+.place-availability.free .place-availability-dot { background: var(--ok); }
+.place-availability.busy { color: var(--danger); }
+.place-availability.busy .place-availability-dot { background: var(--danger); }
+.place-availability-note { font-size: 12px; font-weight: 500; color: var(--ink-faint); }
+
+.place-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-bottom: 32px; }
+.place-gallery-item { margin: 0; border-radius: var(--radius-card); overflow: hidden; border: 1px solid var(--border); background: var(--surface); }
+.place-gallery-item img { width: 100%; height: 160px; object-fit: cover; display: block; }
+.place-gallery-item figcaption { padding: 8px 12px; font-size: 11.5px; color: var(--ink-faint); line-height: 1.4; }
+.place-gallery-empty {
+  background: var(--surface-2); border: 1px dashed var(--border); border-radius: var(--radius-card);
+  padding: 20px; font-size: 13px; color: var(--ink-faint); margin-bottom: 32px; line-height: 1.5;
+}
+
+.place-section { margin-bottom: 28px; }
+.place-section h2 { font-size: 18px; margin-bottom: 14px; }
+.place-prices { display: flex; flex-direction: column; gap: 10px; }
+.place-price-row {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 14px 16px;
+}
+.place-price-label { font-size: 13px; color: var(--ink-soft); margin-bottom: 4px; }
+.place-price-value { font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 15px; color: var(--ink); }
+.place-price-value.muted { font-family: 'Inter', sans-serif; font-weight: 500; color: var(--ink-faint); font-size: 13px; }
+.place-hint { font-size: 12.5px; color: var(--ink-faint); line-height: 1.5; margin-top: 10px; }
+
+.place-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.place-notfound { text-align: center; padding: 60px 20px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.place-notfound p { color: var(--ink-soft); }

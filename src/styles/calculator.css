@@ -40,7 +40,7 @@
 .calc-format-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .calc-format-tile {
   text-align: left; cursor: pointer; border: 1.5px solid var(--border); background: var(--surface-2);
-  border-radius: var(--radius-card); padding: 16px; display: flex; flex-direction: column; gap: 4px;
+  color: var(--ink); border-radius: var(--radius-card); padding: 16px; display: flex; flex-direction: column; gap: 4px;
   transition: border-color .15s ease, background .15s ease, transform .1s ease;
 }
 .calc-format-tile:hover { transform: translateY(-2px); }

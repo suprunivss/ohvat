@@ -1,4 +1,5 @@
 import { IconBuilding, IconBus, IconGradCap, IconRoute } from './icons';
+import { ALL_CITIES } from '../utils/stats';
 
 export default function CatalogHeader({ stats, city, cities, onCityChange }) {
   const items = [
@@ -6,7 +7,7 @@ export default function CatalogHeader({ stats, city, cities, onCityChange }) {
     { icon: IconBus, num: stats.av, label: 'автовокзалов' },
     { icon: IconGradCap, num: stats.vuz, label: stats.vuz ? `вузов, ${stats.vuzPos} позиций` : 'вузов' },
     { icon: IconRoute, num: stats.tr, label: 'маршрутов транспорта' },
-  ];
+  ].filter((item) => item.num > 0);
 
   return (
     <div className="catalog-header">
@@ -21,6 +22,7 @@ export default function CatalogHeader({ stats, city, cities, onCityChange }) {
         <label className="catalog-city-picker">
           <span>Город</span>
           <select value={city} onChange={(e) => onCityChange(e.target.value)}>
+            <option value={ALL_CITIES}>Все города</option>
             {cities.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
         </label>

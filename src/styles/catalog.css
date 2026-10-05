@@ -56,7 +56,7 @@
   background: var(--accent-soft); color: var(--accent-ink); font-size: 14px; font-weight: 700; outline: none;
 }
 
-.catalog-stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; animation: fadeUp .5s ease .1s both; }
+.catalog-stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-top: 20px; animation: fadeUp .5s ease .1s both; }
 .catalog-stat-card {
   display: flex; align-items: center; gap: 13px; background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--radius-card); padding: 15px 17px; box-shadow: var(--shadow-rest);

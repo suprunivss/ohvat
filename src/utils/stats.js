@@ -10,7 +10,10 @@ export function computeStats() {
   };
 }
 
+export const ALL_CITIES = 'all';
+
 export function computeCityStats(city) {
+  if (city === ALL_CITIES) return computeStats();
   const bc = businessCenters.filter((x) => x.city === city);
   const av = Object.entries(busStations).filter(([c]) => c === city);
   const vuz = universities.filter((v) => v.city === city);

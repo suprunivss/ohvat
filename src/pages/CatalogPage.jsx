@@ -7,7 +7,7 @@ import BusStationsSection from '../components/BusStationsSection';
 import UniversitiesSection from '../components/UniversitiesSection';
 import TransportSection from '../components/TransportSection';
 import { businessCenters, busStations, universities, transport } from '../data/catalogData';
-import { computeCityStats } from '../utils/stats';
+import { computeCityStats, ALL_CITIES } from '../utils/stats';
 import { listCities } from '../utils/cities';
 import { useCart } from '../context/CartContext';
 
@@ -23,30 +23,35 @@ export default function CatalogPage() {
   const [query, setQuery] = useState('');
   const { isInCart, toggleItem } = useCart();
 
+  const isAllCities = city === ALL_CITIES;
+  const cityLabel = isAllCities ? 'Все города' : city;
   const stats = computeCityStats(city);
   const q = norm(query);
 
   const bcFiltered = useMemo(
-    () => businessCenters.filter((x) => x.city === city && (!q || norm(x.name).includes(q) || norm(x.address).includes(q))),
-    [city, q]
+    () => businessCenters.filter((x) => (isAllCities || x.city === city) && (!q || norm(x.name).includes(q) || norm(x.address).includes(q))),
+    [city, isAllCities, q]
   );
   const avFiltered = useMemo(
-    () => Object.entries(busStations).filter(([stationCity, info]) => stationCity === city && (!q || norm(stationCity).includes(q) || norm(info.addr).includes(q))),
-    [city, q]
+    () => Object.entries(busStations).filter(([stationCity, info]) => (isAllCities || stationCity === city) && (!q || norm(stationCity).includes(q) || norm(info.addr).includes(q))),
+    [city, isAllCities, q]
   );
   const vuzFiltered = useMemo(
-    () => universities.filter((v) => v.city === city && (!q || norm(v.name).includes(q) || norm(v.abbr).includes(q))),
-    [city, q]
+    () => universities.filter((v) => (isAllCities || v.city === city) && (!q || norm(v.name).includes(q) || norm(v.abbr).includes(q))),
+    [city, isAllCities, q]
   );
   const trFiltered = useMemo(
-    () => transport.routes.filter((r) => r.city === city && (!q || norm(r.route).includes(q) || norm(r.num).includes(q) || norm(r.type).includes(q))),
-    [city, q]
+    () => transport.routes.filter((r) => (isAllCities || r.city === city) && (!q || norm(r.route).includes(q) || norm(r.num).includes(q) || norm(r.type).includes(q))),
+    [city, isAllCities, q]
   );
 
-  const showBC = activeTab === 'all' || activeTab === 'bc';
-  const showAV = activeTab === 'all' || activeTab === 'av';
-  const showVUZ = activeTab === 'all' || activeTab === 'vuz';
-  const showTR = activeTab === 'all' || activeTab === 'tr';
+  // На вкладке "Все места" скрываем категории без единого совпадения для города —
+  // иначе страница превращается в стопку "в каталоге пока нет". На конкретной
+  // вкладке (например "ВУЗы") сообщение об отсутствии мест всё равно нужно.
+  const showBC = activeTab === 'bc' || (activeTab === 'all' && bcFiltered.length > 0);
+  const showAV = activeTab === 'av' || (activeTab === 'all' && avFiltered.length > 0);
+  const showVUZ = activeTab === 'vuz' || (activeTab === 'all' && vuzFiltered.length > 0);
+  const showTR = activeTab === 'tr' || (activeTab === 'all' && trFiltered.length > 0);
 
   const nothingFound =
     Boolean(q) &&
@@ -54,6 +59,10 @@ export default function CatalogPage() {
     (!showAV || avFiltered.length === 0) &&
     (!showVUZ || vuzFiltered.length === 0) &&
     (!showTR || trFiltered.length === 0);
+
+  const nothingInCity =
+    !q && activeTab === 'all' &&
+    bcFiltered.length === 0 && avFiltered.length === 0 && vuzFiltered.length === 0 && trFiltered.length === 0;
 
   const counts = {
     all: bcFiltered.length + avFiltered.length + vuzFiltered.length + trFiltered.length,
@@ -74,13 +83,15 @@ export default function CatalogPage() {
 
           <div className="catalog-results">
             {nothingFound ? (
-              <div className="empty">По запросу «{query}» ничего не найдено в городе «{city}»</div>
+              <div className="empty">По запросу «{query}» ничего не найдено в {isAllCities ? 'каталоге' : `городе «${city}»`}</div>
+            ) : nothingInCity ? (
+              <div className="empty">В городе «{city}» пока нет мест в каталоге</div>
             ) : (
               <>
-                {showBC && <BusinessCentersSection items={bcFiltered} city={city} isInCart={isInCart} onToggle={toggleItem} />}
-                {showAV && <BusStationsSection entries={avFiltered} city={city} isInCart={isInCart} onToggle={toggleItem} />}
-                {showVUZ && <UniversitiesSection items={vuzFiltered} city={city} isInCart={isInCart} onToggle={toggleItem} />}
-                {showTR && <TransportSection routes={trFiltered} city={city} isInCart={isInCart} onToggle={toggleItem} />}
+                {showBC && <BusinessCentersSection items={bcFiltered} city={cityLabel} isInCart={isInCart} onToggle={toggleItem} />}
+                {showAV && <BusStationsSection entries={avFiltered} city={cityLabel} isInCart={isInCart} onToggle={toggleItem} />}
+                {showVUZ && <UniversitiesSection items={vuzFiltered} city={cityLabel} isInCart={isInCart} onToggle={toggleItem} />}
+                {showTR && <TransportSection routes={trFiltered} city={cityLabel} isInCart={isInCart} onToggle={toggleItem} />}
               </>
             )}
           </div>

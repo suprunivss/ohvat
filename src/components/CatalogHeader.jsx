@@ -1,4 +1,4 @@
-import { IconBuilding, IconBus, IconGradCap, IconRoute } from './icons';
+import { IconBuilding, IconBus, IconGradCap, IconRoute, IconMapPin } from './icons';
 import { ALL_CITIES } from '../utils/stats';
 
 export default function CatalogHeader({ stats, city, cities, onCityChange }) {
@@ -11,32 +11,34 @@ export default function CatalogHeader({ stats, city, cities, onCityChange }) {
 
   return (
     <div className="catalog-header">
+      <span className="catalog-glow catalog-glow-1" aria-hidden="true" />
+      <span className="catalog-glow catalog-glow-2" aria-hidden="true" />
+
       <div className="catalog-header-inner">
-        <div className="section-kicker">Каталог</div>
+        <div className="catalog-eyebrow">Каталог рекламных мест</div>
         <h1 className="catalog-title">Выберите места для размещения</h1>
         <p className="catalog-lead">
           От лифтов в бизнес-центрах до экранов на автовокзалах — везде видна цена. Добавляйте
           позиции в заявку прямо из каталога и отправляйте нам за пару минут.
         </p>
 
-        <label className="catalog-city-picker">
-          <span>Город</span>
-          <select value={city} onChange={(e) => onCityChange(e.target.value)}>
-            <option value={ALL_CITIES}>Все города</option>
-            {cities.map((c) => <option key={c} value={c}>{c}</option>)}
-          </select>
-        </label>
+        <div className="catalog-header-controls">
+          <label className="catalog-city-picker">
+            <IconMapPin size={15} />
+            <select value={city} onChange={(e) => onCityChange(e.target.value)}>
+              <option value={ALL_CITIES}>Все города</option>
+              {cities.map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </label>
 
-        <div className="catalog-stat-grid">
-          {items.map((item) => (
-            <div key={item.label} className="catalog-stat-card">
-              <span className="catalog-stat-icon"><item.icon size={20} /></span>
-              <span>
-                <span className="catalog-stat-num">{item.num}</span>
-                <span className="catalog-stat-label">{item.label}</span>
-              </span>
-            </div>
-          ))}
+          <div className="catalog-stat-strip">
+            {items.map((item) => (
+              <div key={item.label} className="catalog-stat-chip">
+                <item.icon size={15} />
+                <span><b>{item.num}</b> {item.label}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

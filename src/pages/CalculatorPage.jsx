@@ -10,7 +10,6 @@ const STAND_FORMATS = [
   { id: 'vuz-a0', label: 'Вуз — лайтбокс', dims: 'формат А0', amount: 9500, priceText: '9 500 ₽/мес' },
 ];
 
-const STAND_CITIES = ['Воронеж'];
 const ALL_CITIES = Object.keys(busStations);
 
 export default function CalculatorPage() {
@@ -20,7 +19,6 @@ export default function CalculatorPage() {
   const { toggleItem, openPanel } = useCart();
 
   const selectedFormat = STAND_FORMATS.find((f) => f.id === standFormat);
-  const hasStands = STAND_CITIES.includes(city);
 
   const cityInfo = busStations[city];
   const durationsForCity = cityInfo ? cityInfo.tariffs : [];
@@ -36,7 +34,6 @@ export default function CalculatorPage() {
 
   const handleAdd = () => {
     if (tab === 'stand') {
-      if (!hasStands) return;
       toggleItem({
         id: 'calc-stand-' + selectedFormat.id,
         cat: 'calc',
@@ -72,12 +69,14 @@ export default function CalculatorPage() {
 
         <div className="calc-card">
           <div className="calc-left">
-            <label className="calc-field">
-              <span>Город</span>
-              <select value={city} onChange={(e) => handleCityChange(e.target.value)}>
-                {ALL_CITIES.map((c) => <option key={c} value={c}>{c}</option>)}
-              </select>
-            </label>
+            {tab === 'screen' && (
+              <label className="calc-field">
+                <span>Город</span>
+                <select value={city} onChange={(e) => handleCityChange(e.target.value)}>
+                  {ALL_CITIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </label>
+            )}
             <div className="calc-field">
               <span>Период размещения</span>
               <div className="calc-static-value">1 месяц</div>
@@ -94,14 +93,14 @@ export default function CalculatorPage() {
 
             <div className="calc-total-row">
               <span>Итог</span>
-              <b>{tab === 'stand' ? (hasStands ? selectedFormat.priceText : 'от 0 ₽') : (currentTariff ? currentTariff[1] : 'от 0 ₽')}</b>
+              <b>{tab === 'stand' ? selectedFormat.priceText : (currentTariff ? currentTariff[1] : 'от 0 ₽')}</b>
             </div>
             <button
               type="button"
               className="btn-lg primary"
               style={{ width: '100%', justifyContent: 'center' }}
               onClick={handleAdd}
-              disabled={tab === 'stand' ? !hasStands : !currentTariff}
+              disabled={tab === 'screen' && !currentTariff}
             >
               Добавить в заявку
             </button>
@@ -112,29 +111,23 @@ export default function CalculatorPage() {
 
           <div className="calc-right">
             {tab === 'stand' ? (
-              hasStands ? (
-                <>
-                  <div className="calc-right-label">Формат:</div>
-                  <div className="calc-format-grid">
-                    {STAND_FORMATS.map((f) => (
-                      <button
-                        key={f.id}
-                        type="button"
-                        className={`calc-format-tile ${standFormat === f.id ? 'active' : ''}`}
-                        onClick={() => setStandFormat(f.id)}
-                      >
-                        <span className="calc-format-name">{f.label}</span>
-                        <span className="calc-format-dims">{f.dims}</span>
-                        <span className="calc-format-price">{f.priceText}</span>
-                      </button>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <div className="calc-empty">
-                  В городе «{city}» пока нет стендов и рамок в каталоге — добавим по мере подключения партнёров.
+              <>
+                <div className="calc-right-label">Формат:</div>
+                <div className="calc-format-grid">
+                  {STAND_FORMATS.map((f) => (
+                    <button
+                      key={f.id}
+                      type="button"
+                      className={`calc-format-tile ${standFormat === f.id ? 'active' : ''}`}
+                      onClick={() => setStandFormat(f.id)}
+                    >
+                      <span className="calc-format-name">{f.label}</span>
+                      <span className="calc-format-dims">{f.dims}</span>
+                      <span className="calc-format-price">{f.priceText}</span>
+                    </button>
+                  ))}
                 </div>
-              )
+              </>
             ) : (
               <>
                 <div className="calc-right-label">Экран:</div>

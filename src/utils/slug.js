@@ -26,5 +26,8 @@ export function placePath(id) {
 }
 
 export function placeUrl(id) {
-  return `${window.location.origin}${placePath(id)}`;
+  // import.meta.env.BASE_URL includes the GitHub Pages project subpath
+  // (e.g. "/ohvat/") — without it, copied links 404 on project pages.
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  return `${window.location.origin}${base}${placePath(id)}`;
 }

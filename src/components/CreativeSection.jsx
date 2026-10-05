@@ -27,7 +27,7 @@ export default function CreativeSection({ staticItems, videoItems, isInCart, onT
       <div className="section-head">
         <h2>Изготовление креатива</h2>
         <div className="section-note">
-          Макет или ролик под размещение — делаем с помощью нейросети и проверяем вручную. Не зависит от
+          Макет или ролик под размещение — быстро, с проверкой качества перед сдачей. Не зависит от
           города, доступно для любого места из каталога.
         </div>
       </div>
